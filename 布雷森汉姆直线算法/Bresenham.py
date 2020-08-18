@@ -2,31 +2,36 @@
 # [1] [布雷森汉姆直线算法](https://zh.wikipedia.org/wiki/%E5%B8%83%E9%9B%B7%E6%A3%AE%E6%BC%A2%E5%A7%86%E7%9B%B4%E7%B7%9A%E6%BC%94%E7%AE%97%E6%B3%95)
 # [2] [布雷森汉姆直线算法](http://www.twinklingstar.cn/2013/293/bresenham-line-algorithm/)
 # [3] [NumPy数组初始化（填充相同的值）](http://cn.voidcc.com/question/p-trailrsz-nt.html)
+# [4] [Bresenham 直线算法](https://zhuanlan.zhihu.com/p/106155534)
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import math
 
-def bresenham_lineV1(img, x0, y0, x1, y1, color):
-     deltax = x1 - x0
-     deltay = y1 - y0
-     error = 0
-     deltaerr = deltay / deltax    # 假設deltax != 0（非垂直線），
-           # 注意：需保留除法運算結果的小數部份
-     y = y0
-     for x in range(x0, x1):
-         setPixel(img, x,y, color)
-         error = error + deltaerr
-         if abs (error) >= 0.5:
-             y = y + 1
-             error = error - 1.0
 
-def swap(a,b):
+def bresenham_lineV1(img, x0, y0, x1, y1, color):
+    deltax = x1 - x0
+    deltay = y1 - y0
+    error = 0
+    deltaerr = deltay / deltax    # 假設deltax != 0（非垂直線），
+    # 注意：需保留除法運算結果的小數部份
+    y = y0
+    for x in range(x0, x1):
+        setPixel(img, x, y, color)
+        error = error + deltaerr
+        if abs(error) >= 0.5:
+            y = y + 1
+            error = error - 1.0
+
+
+def swap(a, b):
     temp = a
     a = b
     b = temp
 
 # 最佳化
+
+
 def bresenham_lineV2(img, x0, y0, x1, y1, color):
     steep = abs(y1 - y0) > abs(x1 - x0)
     if steep:
@@ -55,6 +60,7 @@ def bresenham_lineV2(img, x0, y0, x1, y1, color):
             y = y + ystep
             error = error + deltax
 
+
 def bresenham_lineV3(img, x1, y1, x2, y2, color):
     w = x2 - x1
     h = y2 - y1
@@ -63,9 +69,10 @@ def bresenham_lineV3(img, x1, y1, x2, y2, color):
     w = abs(w)
     h = abs(h)
 
+# 变量f的功能是通过判断其是否大于0来决定x或y的变化
     if w > h:
         f = 2*h - w
-        delta1 = 2*h + 0.01
+        delta1 = 2*h
         delta2 = (h-w)*2
         y = y1
         for x in range(x1, x2, dx):
@@ -90,8 +97,10 @@ def bresenham_lineV3(img, x1, y1, x2, y2, color):
                 f += delta2
         setPixel(img, x, y, color)
 
+
 def setPixel(img, x, y, color):
     img[x][y] = color
+
 
 width = 90
 height = 60
